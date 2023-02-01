@@ -20,6 +20,7 @@
 		323BFBF5298B164B00E9AE20 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323BFBF4298B164B00E9AE20 /* BaseView.swift */; };
 		323BFBF8298B16A900E9AE20 /* RxSwift+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323BFBF7298B16A900E9AE20 /* RxSwift+Extensions.swift */; };
 		323BFBFB298B18E300E9AE20 /* NewsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323BFBFA298B18E300E9AE20 /* NewsListViewController.swift */; };
+		323BFBFE298B28C300E9AE20 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 323BFBFD298B28C300E9AE20 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				323BFBFE298B28C300E9AE20 /* Kingfisher in Frameworks */,
 				323BFBEB298B10BF00E9AE20 /* RxSwift in Frameworks */,
 				323BFBEE298B10D800E9AE20 /* RxGesture in Frameworks */,
 				323BFBE8298B10A900E9AE20 /* SnapKit in Frameworks */,
@@ -129,6 +131,7 @@
 				323BFBE7298B10A900E9AE20 /* SnapKit */,
 				323BFBEA298B10BF00E9AE20 /* RxSwift */,
 				323BFBED298B10D800E9AE20 /* RxGesture */,
+				323BFBFD298B28C300E9AE20 /* Kingfisher */,
 			);
 			productName = RSSReader;
 			productReference = 323BFBCC298B107700E9AE20 /* RSSReader.app */;
@@ -162,6 +165,7 @@
 				323BFBE6298B10A900E9AE20 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				323BFBE9298B10BF00E9AE20 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				323BFBEC298B10D800E9AE20 /* XCRemoteSwiftPackageReference "RxGesture" */,
+				323BFBFC298B28C300E9AE20 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 323BFBCD298B107700E9AE20 /* Products */;
 			projectDirPath = "";
@@ -440,6 +444,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		323BFBFC298B28C300E9AE20 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -457,6 +469,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 323BFBEC298B10D800E9AE20 /* XCRemoteSwiftPackageReference "RxGesture" */;
 			productName = RxGesture;
+		};
+		323BFBFD298B28C300E9AE20 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 323BFBFC298B28C300E9AE20 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 
