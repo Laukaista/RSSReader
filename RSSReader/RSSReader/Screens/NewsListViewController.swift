@@ -49,6 +49,8 @@ final class NewsListViewController: BaseViewController {
             NewsListCell.self,
             forCellWithReuseIdentifier: "NewsListCell"
         )
+        newsList.delegate = self
+        newsList.dataSource = self
         
         return collection
     }()
@@ -62,8 +64,6 @@ final class NewsListViewController: BaseViewController {
             action: nil
         )
         view.backgroundColor = UIColor(named: "Background")
-        newsList.delegate = self
-        newsList.dataSource = self
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -42,7 +42,8 @@ final class ApplicationManager: ApplicationFacade {
                     date: news.date,
                     imageLink: URL(string: news.imageLink ?? ""),
                     viewed: news.isViewed,
-                    content: news.description
+                    content: news.description,
+                    newsLink: URL(string: news.newsLink)
                 )
             })
         }
@@ -60,7 +61,8 @@ final class ApplicationManager: ApplicationFacade {
                         date: Date.dateFromRss(string: item.pubDate) ?? Date(),
                         imageLink: URL(string: item.imageLink),
                         viewed: false,
-                        content: item.description
+                        content: item.description,
+                        newsLink: URL(string: item.link)
                     )
                 }
                 
@@ -82,7 +84,8 @@ final class ApplicationManager: ApplicationFacade {
             date: news.date,
             imageLink: news.imageLink,
             viewed: true,
-            content: news.content
+            content: news.content,
+            newsLink: news.newsLink
         )
         models[index] = newModel
         storageService.updateEntity(from: newModel) { [weak self] _ in

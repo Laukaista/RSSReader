@@ -76,6 +76,31 @@ final class NewsScreenViewController: ViewController<NewsModel> {
         newsTitle.text = model.title
         newsDate.text = model.date.localizedString()
         newsContent.text = model.content
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Поделиться",
+            style: .plain,
+            target: self,
+            action: #selector(shareTapped)
+        )
+    }
+    
+    @objc func shareTapped() {
+        guard let newsLink = model.newsLink else { return }
+        let activityVC = UIActivityViewController(
+            activityItems: [model.title, newsLink],
+            applicationActivities: nil
+        )
+        
+        activityVC.excludedActivityTypes = [
+            .message,
+            .airDrop,
+            .addToReadingList,
+            .postToFacebook
+        ]
+        
+        DispatchQueue.main.async {
+            self.present(activityVC, animated: true, completion: nil)
+        }
     }
     
     override func setupSubviews() {

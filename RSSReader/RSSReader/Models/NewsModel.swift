@@ -13,4 +13,5 @@ struct NewsModel: Model, Hashable {
     let imageLink: URL?
     let viewed: Bool
     let content: String
+    let newsLink: URL?
 }
