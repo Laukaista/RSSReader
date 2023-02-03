@@ -8,7 +8,7 @@
 import RxSwift
 import UIKit
 
-public protocol DisposableController {
+protocol DisposableController {
     var disposeBag: DisposeBag! { get }
     func dispose()
 }

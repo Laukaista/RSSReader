@@ -11,9 +11,9 @@ import RxSwift
 final class ApplicationManager: ApplicationFacade {
     private let disposeBag = DisposeBag()
     
-    var listNeedsUpdate = PublishSubject<Void>()
-    var errorOccured = PublishSubject<String>()
-    var models = [NewsModel]()
+    private(set) var listNeedsUpdate = PublishSubject<Void>()
+    private(set) var errorOccured = PublishSubject<String>()
+    private(set) var models = [NewsModel]()
     
     private let rssService: RSSService
     private let storageService: StorageServiceProtocol
@@ -22,11 +22,11 @@ final class ApplicationManager: ApplicationFacade {
         self.rssService = rssService
         self.storageService = storageService
         
-        let isFirstLainch = !UserDefaults.standard.bool(forKey: "rssApp_is_first_launch")
+        let isFirstLainch = UserDefaults.standard.integer(forKey: "rssApp_is_first_launch")
         
-        if isFirstLainch {
+        if isFirstLainch == 0 {
             updateNewsList()
-            UserDefaults.standard.set(false, forKey: "rssApp_is_first_launch")
+            UserDefaults.standard.set(1, forKey: "rssApp_is_first_launch")
         } else {
             loadNewsList()
         }
@@ -42,7 +42,7 @@ final class ApplicationManager: ApplicationFacade {
                     date: news.date,
                     imageLink: URL(string: news.imageLink ?? ""),
                     viewed: news.isViewed,
-                    content: news.description,
+                    content: news.content,
                     newsLink: URL(string: news.newsLink)
                 )
             })
@@ -61,7 +61,7 @@ final class ApplicationManager: ApplicationFacade {
                         date: Date.dateFromRss(string: item.pubDate) ?? Date(),
                         imageLink: URL(string: item.imageLink),
                         viewed: false,
-                        content: item.description,
+                        content: item.descr,
                         newsLink: URL(string: item.link)
                     )
                 }

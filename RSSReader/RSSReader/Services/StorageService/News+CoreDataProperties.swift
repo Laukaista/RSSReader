@@ -16,12 +16,12 @@ extension News {
         return NSFetchRequest<News>(entityName: "News")
     }
 
-    @NSManaged public var title: String
+    @NSManaged public var content: String
     @NSManaged public var date: Date
     @NSManaged public var imageLink: String?
     @NSManaged public var isViewed: Bool
-    @NSManaged public var content: String
     @NSManaged public var newsLink: String
+    @NSManaged public var title: String
 
 }
 

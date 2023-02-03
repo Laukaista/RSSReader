@@ -49,8 +49,8 @@ final class NewsListViewController: BaseViewController {
             NewsListCell.self,
             forCellWithReuseIdentifier: "NewsListCell"
         )
-        newsList.delegate = self
-        newsList.dataSource = self
+        collection.delegate = self
+        collection.dataSource = self
         
         return collection
     }()
@@ -90,7 +90,7 @@ final class NewsListViewController: BaseViewController {
         }
         
         newsList.snp.makeConstraints { make in
-            make.left.right.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.left.right.bottom.equalToSuperview()
             make.top.equalTo(topLogo.snp.bottom).inset(-20.0)
         }
     }
@@ -110,7 +110,9 @@ final class NewsListViewController: BaseViewController {
             .withUnretained(self)
             .subscribe(onNext: { owner, models in
                 owner.newsList.reloadData()
-                owner.refreshControl.endRefreshing()
+                owner.newsList.performBatchUpdates {
+                    owner.refreshControl.endRefreshing()
+                }
             })
             .disposed(by: self.disposeBag)
         
@@ -120,12 +122,12 @@ final class NewsListViewController: BaseViewController {
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
                 let alert = UIAlertController(
-                    title: "Error",
-                    message: "Error occurred, please try again later.",
+                    title: NSLocalizedString("alert.title", comment: ""),
+                    message: NSLocalizedString("alert.error", comment: ""),
                     preferredStyle: .alert
                 )
                 let okButton = UIAlertAction(
-                    title: "OK",
+                    title: NSLocalizedString("button.alert.ok", comment: ""),
                     style: .default
                 )
                 alert.addAction(okButton)
@@ -159,6 +161,7 @@ extension NewsListViewController: UICollectionViewDelegate, UICollectionViewData
                 let controller = NewsScreenViewController(title: "Lenta.ru", model: model)
                 self.navigationController?.pushViewController(controller, animated: true)
                 self.newsList.reloadData()
+                self.refreshControl.endRefreshing()
             }
         }
     }

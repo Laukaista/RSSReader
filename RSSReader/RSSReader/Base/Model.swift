@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol Model {
+protocol Model {
     
 }

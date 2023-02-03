@@ -13,7 +13,7 @@ final class NewsListCell: CollectionCell<NewsModel> {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .style(.title)
+        label.font = .style(.cardTitle)
         label.numberOfLines = 2
         label.textAlignment = .left
         
@@ -22,7 +22,7 @@ final class NewsListCell: CollectionCell<NewsModel> {
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.font = .style(.date)
+        label.font = .style(.cardDate)
         label.numberOfLines = 1
         label.textAlignment = .left
         
@@ -35,7 +35,7 @@ final class NewsListCell: CollectionCell<NewsModel> {
         label.textColor = .lightGray
         label.numberOfLines = 1
         label.textAlignment = .right
-        label.text = "Просмотрено"
+        label.text = NSLocalizedString("card.viewed", comment: "")
         
         return label
     }()
@@ -71,10 +71,10 @@ final class NewsListCell: CollectionCell<NewsModel> {
     }
     
     override func setupLayout() {
-        cardContent.snp.makeConstraints { make in
+        cardContent.snp.remakeConstraints { make in
+            make.height.equalTo(imageView.snp.height)
             make.edges.equalToSuperview()
             make.width.equalTo(UIScreen.main.bounds.width - 40.0)
-            make.height.equalTo(50.0)
         }
         
         newsContent.snp.makeConstraints { make in
@@ -112,19 +112,9 @@ final class NewsListCell: CollectionCell<NewsModel> {
         dateLabel.text = model.date.localizedString()
         
         if let imageLink = model.imageLink {
-            imageView.kf.setImage(with: imageLink)
-            
-            cardContent.snp.remakeConstraints { make in
-                make.height.equalTo(imageView.snp.height)
-                make.edges.equalToSuperview()
-                make.width.equalTo(UIScreen.main.bounds.width - 40.0)
-            }
+            imageView.kf.setImage(with: imageLink, placeholder: UIImage(named: "Placeholder"))
         } else {
-            cardContent.snp.remakeConstraints { make in
-                make.height.equalTo(newsContent.snp.height)
-                make.width.equalTo(UIScreen.main.bounds.width - 40.0)
-                make.edges.equalToSuperview()
-            }
+            imageView.image = UIImage(named: "Placeholder")
         }
         
         viewedMark.isHidden = !model.viewed

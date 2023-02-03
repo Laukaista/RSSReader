@@ -9,13 +9,13 @@ import Foundation
 import UIKit
 import RxSwift
 
-public protocol BaseViewControllerProtocol: UIViewController { }
+protocol BaseViewControllerProtocol: UIViewController { }
 
-open class BaseViewController: UIViewController, BaseViewControllerProtocol, DisposableController {
+class BaseViewController: UIViewController, BaseViewControllerProtocol, DisposableController {
     
-    public private(set) var disposeBag: DisposeBag! = DisposeBag()
+    private(set) var disposeBag: DisposeBag! = DisposeBag()
 
-    public init(title: String? = nil) {
+    init(title: String? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = .systemBackground
         self.title = title
@@ -25,15 +25,15 @@ open class BaseViewController: UIViewController, BaseViewControllerProtocol, Dis
         setupHandlers()
     }
 
-    open func setupSubviews() {
+    func setupSubviews() {
 
     }
     
-    open func setupLayout() {
+    func setupLayout() {
 
     }
     
-    open func setupHandlers() {
+    func setupHandlers() {
 
     }
 
@@ -45,11 +45,11 @@ open class BaseViewController: UIViewController, BaseViewControllerProtocol, Dis
         print("[DEINIT]", self)
     }
 
-    open func dispose() {
+    func dispose() {
         self.disposeBag = nil
     }
 
-    open override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isBeingDismissed {
             self.dispose()
@@ -57,12 +57,12 @@ open class BaseViewController: UIViewController, BaseViewControllerProtocol, Dis
     }
 }
 
-open class ViewController<T>: UIViewController, BaseViewControllerProtocol, DisposableController where T: Model {
-    public private(set) var model: T
+class ViewController<T>: UIViewController, BaseViewControllerProtocol, DisposableController where T: Model {
+    private(set) var model: T
     
-    public private(set) var disposeBag: DisposeBag! = DisposeBag()
+    private(set) var disposeBag: DisposeBag! = DisposeBag()
 
-    public init(title: String? = nil, model: T) {
+    init(title: String? = nil, model: T) {
         self.model = model
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = .systemBackground
@@ -73,15 +73,15 @@ open class ViewController<T>: UIViewController, BaseViewControllerProtocol, Disp
         setupHandlers()
     }
 
-    open func setupSubviews() {
+    func setupSubviews() {
 
     }
     
-    open func setupLayout() {
+    func setupLayout() {
 
     }
     
-    open func setupHandlers() {
+    func setupHandlers() {
 
     }
 
@@ -93,11 +93,11 @@ open class ViewController<T>: UIViewController, BaseViewControllerProtocol, Disp
         print("[DEINIT]", self)
     }
 
-    open func dispose() {
+    func dispose() {
         self.disposeBag = nil
     }
 
-    open override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isBeingDismissed {
             self.dispose()

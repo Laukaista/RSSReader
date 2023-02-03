@@ -18,25 +18,36 @@ enum FontWeight {
 enum FontStyle {
     case title
     case date
+    case cardTitle
+    case cardDate
     case viewed
+    case content
     
     var defaultSize: CGFloat {
         switch self {
         case .title:
-            return 17
+            return 24
         case .date:
+            return 20
+        case .cardTitle:
+            return 17
+        case .cardDate:
             return 14
         case .viewed:
-            return 14
+            return 12
+        case .content:
+            return 20
         }
     }
 
     var fontWeight: FontWeight {
         switch self {
-        case .title:
+        case .cardTitle, .title:
             return .bold
-        case .date, .viewed:
+        case .cardDate, .viewed, .date:
             return .medium
+        case .content:
+            return .regular
         }
     }
 }

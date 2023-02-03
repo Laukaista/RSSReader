@@ -9,8 +9,8 @@ import UIKit
 import SnapKit
 import RxSwift
 
-open class BaseCollectionCell: UICollectionViewCell {
-    public private(set) var disposeBag = DisposeBag()
+class BaseCollectionCell: UICollectionViewCell {
+    private(set) var disposeBag = DisposeBag()
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -22,19 +22,19 @@ open class BaseCollectionCell: UICollectionViewCell {
         setupHandlers()
     }
 
-    open func setupSubviews() {
+    func setupSubviews() {
 
     }
 
-    open func setupLayout() {
+    func setupLayout() {
 
     }
 
-    open func setupHandlers() {
+    func setupHandlers() {
 
     }
 
-    open override func prepareForReuse() {
+    override func prepareForReuse() {
         super.prepareForReuse()
         disposeBag = DisposeBag()
 
@@ -46,10 +46,10 @@ open class BaseCollectionCell: UICollectionViewCell {
     }
 }
 
-open class CollectionCell<T>: BaseCollectionCell where T: Model {
+class CollectionCell<T>: BaseCollectionCell where T: Model {
     public var model: T?
     
-    open func updateModel(_ model: T) {
+    func updateModel(_ model: T) {
         self.model = model
     }
     

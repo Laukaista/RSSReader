@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  RSSReader
+
+  Created by Dmitriy Veremei on 3.02.23.
+  
+*/
+
+"button.share" = "Поделиться";
+"button.alert.ok" = "Хорошо";
+"alert.title" = "Ошибка";
+"alert.error" = "Ошибка загрузки, проверьте соединение с интернетом";
+"card.viewed" = "Просмотрено";

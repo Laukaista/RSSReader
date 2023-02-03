@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol RSSServiceProtocol: XMLParserDelegate {
+protocol RSSServiceProtocol: XMLParserDelegate {
     associatedtype Model
     
     func parseFeed(link: String, completionHandler: @escaping (Result<[Model], NetworkError>) -> Void)
@@ -19,7 +19,7 @@ public protocol RSSServiceProtocol: XMLParserDelegate {
     var parserCompletionHandler: ((Result<[Model], NetworkError>) -> Void)? { get }
 }
 
-public extension RSSServiceProtocol {
+extension RSSServiceProtocol {
     func getData(urlString: String, completion: @escaping(Result<Data, NetworkError>) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(.failure(.badURL))
