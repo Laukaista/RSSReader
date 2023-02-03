@@ -10,7 +10,7 @@ import Foundation
 struct NewsListCellModel: Model {
     let title: String
     let date: String
-    let imageLink: String?
+    let imageLink: URL?
     let viewed: Bool
     let content: String
 }

@@ -17,7 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let startScreen = NewsListViewController()
+        let appManager = ApplicationManager()
+        let startScreen = NewsListViewController(manager: appManager)
         let navigationVC = UINavigationController(rootViewController: startScreen)
         window.rootViewController = navigationVC
         window.makeKeyAndVisible()

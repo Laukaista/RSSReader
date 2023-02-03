@@ -112,8 +112,7 @@ final class NewsListCell: CollectionCell<NewsListCellModel> {
         dateLabel.text = model.date
         
         if let imageLink = model.imageLink {
-            let imageSource = URL(string: imageLink)
-            imageView.kf.setImage(with: imageSource)
+            imageView.kf.setImage(with: imageLink)
             
             cardContent.snp.remakeConstraints { make in
                 make.height.equalTo(imageView.snp.height)
