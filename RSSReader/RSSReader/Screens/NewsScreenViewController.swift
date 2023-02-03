@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class NewsScreenViewController: ViewController<NewsListCellModel> {
+final class NewsScreenViewController: ViewController<NewsModel> {
     private let image: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleToFill
@@ -72,9 +72,9 @@ final class NewsScreenViewController: ViewController<NewsListCellModel> {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "Background")
-        image.kf.setImage(with: URL(string: model.imageLink ?? ""))
+        image.kf.setImage(with: model.imageLink)
         newsTitle.text = model.title
-        newsDate.text = model.date
+        newsDate.text = model.date.localizedString()
         newsContent.text = model.content
     }
     

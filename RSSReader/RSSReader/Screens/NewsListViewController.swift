@@ -10,50 +10,16 @@ import RxSwift
 import RxCocoa
 
 final class NewsListViewController: BaseViewController {
-    private lazy var newsDataMock: [NewsListCellModel] = [
-        NewsListCellModel(
-            title: "Зеркалирование GitHub-проектов в 2023 году",
-            date: "02 February 2023",
-            imageLink: "https://habrastorage.org/getpro/habr/upload_files/dde/4be/ac6/dde4beac6d26fca21acf850913d1f403.jpeg",
-            viewed: true,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "Этика беспилотного автомобиля и возможное решение «проблемы вагонетки»",
-            date: "01 February 2023",
-            imageLink: nil,
-            viewed: true,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "Логистическая регрессия: подробный обзор",
-            date: "02 February 2023",
-            imageLink: "https://miro.medium.com/max/700/1*UgYbimgPXf6XXxMy2yqRLw.png",
-            viewed: false,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "Что такое тексел?",
-            date: "02 February 2023",
-            imageLink: "https://habrastorage.org/getpro/habr/upload_files/998/1e6/e69/9981e6e6909636c04bb3d8f6c7f31ade.png",
-            viewed: false,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "React, всплывающие подсказки (tooltips), для самых маленьких",
-            date: "02 February 2023",
-            imageLink: nil,
-            viewed: true,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "Не только Neuralink: что такое нейроинтерфейсы и кто кроме Маска разрабатывает их",
-            date: "02 February 2023",
-            imageLink: "https://habrastorage.org/getpro/habr/upload_files/47a/160/b7d/47a160b7da953d6218a50634cefa954e.png",
-            viewed: true,
-            content: ""
-        ),
-    ]
+    private let appManager: ApplicationFacade
+    
+    init(title: String? = nil, manager: ApplicationFacade) {
+        appManager = manager
+        super.init(title: title)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let topLogo: UIImageView = {
         let image = UIImage(named: "LentaLogo")
@@ -89,7 +55,12 @@ final class NewsListViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationItem.backBarButtonItem = UIBarButtonItem(
+            title: "",
+            style: .plain,
+            target: nil,
+            action: nil
+        )
         view.backgroundColor = UIColor(named: "Background")
         newsList.delegate = self
         newsList.dataSource = self
@@ -129,7 +100,36 @@ final class NewsListViewController: BaseViewController {
             .controlEvent(.valueChanged)
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
-                print("Refresh")
+                owner.appManager.updateNewsList()
+            })
+            .disposed(by: self.disposeBag)
+        
+        appManager
+            .listNeedsUpdate
+            .onMain()
+            .withUnretained(self)
+            .subscribe(onNext: { owner, models in
+                owner.newsList.reloadData()
+                owner.refreshControl.endRefreshing()
+            })
+            .disposed(by: self.disposeBag)
+        
+        appManager
+            .errorOccured
+            .onMain()
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                let alert = UIAlertController(
+                    title: "Error",
+                    message: "Error occurred, please try again later.",
+                    preferredStyle: .alert
+                )
+                let okButton = UIAlertAction(
+                    title: "OK",
+                    style: .default
+                )
+                alert.addAction(okButton)
+                owner.present(alert, animated: true, completion: nil)
                 owner.refreshControl.endRefreshing()
             })
             .disposed(by: self.disposeBag)
@@ -138,21 +138,28 @@ final class NewsListViewController: BaseViewController {
 
 extension NewsListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return newsDataMock.count
+        return appManager.models.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = newsList.dequeueReusableCell(withReuseIdentifier: "NewsListCell", for: indexPath) as? NewsListCell
         else { return UICollectionViewCell() }
         
-        cell.updateModel(newsDataMock[indexPath.row])
+        guard !appManager.models.isEmpty else { return UICollectionViewCell() }
+        cell.updateModel(appManager.models[indexPath.row])
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let model = newsDataMock[indexPath.row]
-        let controller = NewsScreenViewController(title: "Lenta.ru", model: model)
-        navigationController?.pushViewController(controller, animated: true)
+        appManager.getNews(index: indexPath.row) { [weak self] model in
+            guard let self else { return }
+            
+            DispatchQueue.main.async {
+                let controller = NewsScreenViewController(title: "Lenta.ru", model: model)
+                self.navigationController?.pushViewController(controller, animated: true)
+                self.newsList.reloadData()
+            }
+        }
     }
 }
