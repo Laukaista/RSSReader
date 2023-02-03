@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-public extension ObservableType {
+extension ObservableType {
     func voidValues() -> Observable<Void> {
         return map { _ in () }
     }

@@ -68,7 +68,7 @@ extension RSSService: XMLParserDelegate {
             case "link" :
                 item?.link = string
             case "description":
-                item?.description = string
+                item?.descr = string
             case "pubDate":
                 item?.pubDate = string
             case "category":

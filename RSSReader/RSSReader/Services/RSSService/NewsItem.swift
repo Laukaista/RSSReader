@@ -11,7 +11,7 @@ struct NewsItem {
     var author: String = ""
     var title: String = ""
     var link: String = ""
-    var description: String = ""
+    var descr: String = ""
     var pubDate: String = ""
     var imageLink: String = ""
     var category: String = ""

@@ -7,7 +7,6 @@
 
 import Foundation
 import CoreData
-import UIKit
 
 final class StorageService: StorageServiceProtocol {
     lazy var persistentContainer: NSPersistentContainer = {
@@ -30,6 +29,7 @@ final class StorageService: StorageServiceProtocol {
             new.imageLink = model.imageLink?.description
             new.isViewed = model.viewed
             new.content = model.content
+            new.newsLink = model.newsLink?.description ?? ""
         }
         
         do {

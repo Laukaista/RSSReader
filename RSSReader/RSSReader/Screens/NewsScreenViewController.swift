@@ -37,6 +37,7 @@ final class NewsScreenViewController: ViewController<NewsModel> {
     private let newsContent: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
+        label.font = .style(.content)
         
         return label
     }()
@@ -72,10 +73,35 @@ final class NewsScreenViewController: ViewController<NewsModel> {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "Background")
-        image.kf.setImage(with: model.imageLink)
+        image.kf.setImage(with: model.imageLink, placeholder: UIImage(named: "Placeholder"))
         newsTitle.text = model.title
         newsDate.text = model.date.localizedString()
         newsContent.text = model.content
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: NSLocalizedString("button.share", comment: ""),
+            style: .plain,
+            target: self,
+            action: #selector(shareTapped)
+        )
+    }
+    
+    @objc func shareTapped() {
+        guard let newsLink = model.newsLink else { return }
+        let activityVC = UIActivityViewController(
+            activityItems: [model.title, newsLink],
+            applicationActivities: nil
+        )
+        
+        activityVC.excludedActivityTypes = [
+            .message,
+            .airDrop,
+            .addToReadingList,
+            .postToFacebook
+        ]
+        
+        DispatchQueue.main.async {
+            self.present(activityVC, animated: true, completion: nil)
+        }
     }
     
     override func setupSubviews() {

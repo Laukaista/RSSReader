@@ -9,10 +9,10 @@ import UIKit
 import SnapKit
 import RxSwift
 
-open class BaseView: UIView {
-    public let disposeBag = DisposeBag()
+class BaseView: UIView {
+    let disposeBag = DisposeBag()
 
-    public init() {
+    init() {
         super.init(frame: .zero)
 
         setupSubviews()
@@ -20,15 +20,15 @@ open class BaseView: UIView {
         setupHandlers()
     }
 
-    open func setupSubviews() {
+    func setupSubviews() {
 
     }
 
-    open func setupLayout() {
+    func setupLayout() {
 
     }
 
-    open func setupHandlers() {
+    func setupHandlers() {
 
     }
 
