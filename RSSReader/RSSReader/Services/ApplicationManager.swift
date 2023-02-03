@@ -6,58 +6,88 @@
 //
 
 import Foundation
+import RxSwift
 
 final class ApplicationManager: ApplicationFacade {
-    private var newsDataMock: [NewsListCellModel] = [
-        NewsListCellModel(
-            title: "Зеркалирование GitHub-проектов в 2023 году",
-            date: "02 February 2023",
-            imageLink: URL(string: "https://habrastorage.org/getpro/habr/upload_files/dde/4be/ac6/dde4beac6d26fca21acf850913d1f403.jpeg"),
-            viewed: true,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "Этика беспилотного автомобиля и возможное решение «проблемы вагонетки»",
-            date: "01 February 2023",
-            imageLink: nil,
-            viewed: true,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "Логистическая регрессия: подробный обзор",
-            date: "02 February 2023",
-            imageLink: URL(string: "https://miro.medium.com/max/700/1*UgYbimgPXf6XXxMy2yqRLw.png"),
-            viewed: false,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "Что такое тексел?",
-            date: "02 February 2023",
-            imageLink: URL(string: "https://habrastorage.org/getpro/habr/upload_files/998/1e6/e69/9981e6e6909636c04bb3d8f6c7f31ade.png"),
-            viewed: false,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "React, всплывающие подсказки (tooltips), для самых маленьких",
-            date: "02 February 2023",
-            imageLink: nil,
-            viewed: true,
-            content: ""
-        ),
-        NewsListCellModel(
-            title: "Не только Neuralink: что такое нейроинтерфейсы и кто кроме Маска разрабатывает их",
-            date: "02 February 2023",
-            imageLink: URL(string: "https://habrastorage.org/getpro/habr/upload_files/47a/160/b7d/47a160b7da953d6218a50634cefa954e.png"),
-            viewed: true,
-            content: ""
-        ),
-    ]
+    private let disposeBag = DisposeBag()
     
-    func getNewsList(completion: @escaping ([NewsListCellModel]) -> Void) {
-        completion(newsDataMock)
+    var listNeedsUpdate = PublishSubject<Void>()
+    var errorOccured = PublishSubject<String>()
+    var models = [NewsModel]()
+    
+    private let rssService: RSSService
+    private let storageService: StorageServiceProtocol
+    
+    init(rssService: RSSService, storageService: StorageService) {
+        self.rssService = rssService
+        self.storageService = storageService
+        
+        let isFirstLainch = !UserDefaults.standard.bool(forKey: "rssApp_is_first_launch")
+        
+        if isFirstLainch {
+            updateNewsList()
+            UserDefaults.standard.set(false, forKey: "rssApp_is_first_launch")
+        } else {
+            loadNewsList()
+        }
     }
     
-    func getNews(index: Int, completion: @escaping (NewsListCellModel) -> Void) {
-        completion(newsDataMock[index])
+    private func loadNewsList() {
+        storageService.readEntities { [weak self] news in
+            guard let self else { return }
+            
+            self.models = news.compactMap({ news in
+                return NewsModel(
+                    title: news.title,
+                    date: news.date,
+                    imageLink: URL(string: news.imageLink ?? ""),
+                    viewed: news.isViewed,
+                    content: news.description
+                )
+            })
+        }
+    }
+    
+    func updateNewsList() {
+        rssService.parseFeed(link: LentaStream.news.link) { [weak self] result in
+            guard let self else { return }
+            
+            switch result {
+            case .success(let items):
+                let internalModels = items.map { item in
+                    return NewsModel(
+                        title: item.title,
+                        date: Date.dateFromRss(string: item.pubDate) ?? Date(),
+                        imageLink: URL(string: item.imageLink),
+                        viewed: false,
+                        content: item.description
+                    )
+                }
+                
+                let updatedModels = Array(Set(internalModels).subtracting(self.models))
+                self.storageService.createEntity(from: updatedModels) { _ in
+                    self.models = updatedModels
+                    self.listNeedsUpdate.onNext(())
+                }
+            case .failure(let error):
+                self.errorOccured.onNext(error.localizedDescription)
+            }
+        }
+    }
+    
+    func getNews(index: Int, completion: @escaping (NewsModel) -> Void) {
+        let news = models[index]
+        let newModel = NewsModel(
+            title: news.title,
+            date: news.date,
+            imageLink: news.imageLink,
+            viewed: true,
+            content: news.content
+        )
+        models[index] = newModel
+        storageService.updateEntity(from: newModel) { [weak self] _ in
+            guard let self else { return }
+            completion(self.models[index])
+        }
     }
 }

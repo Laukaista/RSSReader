@@ -6,8 +6,12 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol ApplicationFacade {
-    func getNewsList(completion: @escaping ([NewsListCellModel]) -> Void)
-    func getNews(index: Int, completion: @escaping (NewsListCellModel) -> Void)
+    var models: [NewsModel] { get }
+    var listNeedsUpdate: PublishSubject<Void> { get }
+    var errorOccured: PublishSubject<String> { get }
+    func updateNewsList()
+    func getNews(index: Int, completion: @escaping (NewsModel) -> Void)
 }

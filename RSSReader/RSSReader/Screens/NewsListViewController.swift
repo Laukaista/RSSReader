@@ -10,7 +10,6 @@ import RxSwift
 import RxCocoa
 
 final class NewsListViewController: BaseViewController {
-    private var newsModels = [NewsListCellModel]()
     private let appManager: ApplicationFacade
     
     init(title: String? = nil, manager: ApplicationFacade) {
@@ -56,12 +55,15 @@ final class NewsListViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationItem.backBarButtonItem = UIBarButtonItem(
+            title: "",
+            style: .plain,
+            target: nil,
+            action: nil
+        )
         view.backgroundColor = UIColor(named: "Background")
         newsList.delegate = self
         newsList.dataSource = self
-        
-        updateNewsList()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,34 +100,53 @@ final class NewsListViewController: BaseViewController {
             .controlEvent(.valueChanged)
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
-                owner.updateNewsList()
+                owner.appManager.updateNewsList()
+            })
+            .disposed(by: self.disposeBag)
+        
+        appManager
+            .listNeedsUpdate
+            .onMain()
+            .withUnretained(self)
+            .subscribe(onNext: { owner, models in
+                owner.newsList.reloadData()
                 owner.refreshControl.endRefreshing()
             })
             .disposed(by: self.disposeBag)
-    }
-    
-    private func updateNewsList() {
-        appManager.getNewsList { [weak self] models in
-            guard let self else { return }
-            
-            DispatchQueue.main.async {
-                self.newsModels = models
-                self.newsList.reloadData()
-            }
-        }
+        
+        appManager
+            .errorOccured
+            .onMain()
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                let alert = UIAlertController(
+                    title: "Error",
+                    message: "Error occurred, please try again later.",
+                    preferredStyle: .alert
+                )
+                let okButton = UIAlertAction(
+                    title: "OK",
+                    style: .default
+                )
+                alert.addAction(okButton)
+                owner.present(alert, animated: true, completion: nil)
+                owner.refreshControl.endRefreshing()
+            })
+            .disposed(by: self.disposeBag)
     }
 }
 
 extension NewsListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return newsModels.count
+        return appManager.models.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = newsList.dequeueReusableCell(withReuseIdentifier: "NewsListCell", for: indexPath) as? NewsListCell
         else { return UICollectionViewCell() }
         
-        cell.updateModel(newsModels[indexPath.row])
+        guard !appManager.models.isEmpty else { return UICollectionViewCell() }
+        cell.updateModel(appManager.models[indexPath.row])
         
         return cell
     }
@@ -134,8 +155,11 @@ extension NewsListViewController: UICollectionViewDelegate, UICollectionViewData
         appManager.getNews(index: indexPath.row) { [weak self] model in
             guard let self else { return }
             
-            let controller = NewsScreenViewController(title: "Lenta.ru", model: model)
-            self.navigationController?.pushViewController(controller, animated: true)
+            DispatchQueue.main.async {
+                let controller = NewsScreenViewController(title: "Lenta.ru", model: model)
+                self.navigationController?.pushViewController(controller, animated: true)
+                self.newsList.reloadData()
+            }
         }
     }
 }

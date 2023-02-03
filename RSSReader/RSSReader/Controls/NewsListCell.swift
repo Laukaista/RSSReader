@@ -8,8 +8,8 @@
 import UIKit
 import Kingfisher
 
-final class NewsListCell: CollectionCell<NewsListCellModel> {
-    private var shadowLayer: CAShapeLayer!
+final class NewsListCell: CollectionCell<NewsModel> {
+    private var shadowLayer: CAShapeLayer?
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -42,7 +42,7 @@ final class NewsListCell: CollectionCell<NewsListCellModel> {
     
     private let newsContent: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "CardBackground")
         view.layer.cornerRadius = 16.0
 
         return view
@@ -105,11 +105,11 @@ final class NewsListCell: CollectionCell<NewsListCellModel> {
         }
     }
     
-    override func updateModel(_ model: NewsListCellModel) {
+    override func updateModel(_ model: NewsModel) {
         super.updateModel(model)
         
         titleLabel.text = model.title
-        dateLabel.text = model.date
+        dateLabel.text = model.date.localizedString()
         
         if let imageLink = model.imageLink {
             imageView.kf.setImage(with: imageLink)
@@ -144,15 +144,20 @@ final class NewsListCell: CollectionCell<NewsListCellModel> {
         if shadowLayer == nil {
             shadowLayer = CAShapeLayer()
           
-            shadowLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: 16.0).cgPath
+            shadowLayer!.path = UIBezierPath(roundedRect: bounds, cornerRadius: 16.0).cgPath
 
-            shadowLayer.shadowColor = UIColor.black.cgColor
-            shadowLayer.shadowPath = shadowLayer.path
-            shadowLayer.shadowOffset = CGSize(width: 0.0, height: 1.0)
-            shadowLayer.shadowOpacity = 0.2
-            shadowLayer.shadowRadius = 3
+            shadowLayer!.shadowColor = UIColor(named: "Shadow")?.cgColor
+            shadowLayer!.shadowPath = shadowLayer!.path
+            shadowLayer!.shadowOffset = CGSize(width: 0.0, height: 1.0)
+            shadowLayer!.shadowOpacity = 0.2
+            shadowLayer!.shadowRadius = 3
 
-            layer.insertSublayer(shadowLayer, at: 0)
+            layer.insertSublayer(shadowLayer!, at: 0)
         }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        shadowLayer?.shadowColor = UIColor(named: "Shadow")?.cgColor
     }
 }
