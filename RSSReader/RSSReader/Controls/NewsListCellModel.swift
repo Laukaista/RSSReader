@@ -12,4 +12,5 @@ struct NewsListCellModel: Model {
     let date: String
     let imageLink: String?
     let viewed: Bool
+    let content: String
 }

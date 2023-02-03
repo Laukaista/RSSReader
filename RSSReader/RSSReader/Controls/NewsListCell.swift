@@ -110,6 +110,7 @@ final class NewsListCell: CollectionCell<NewsListCellModel> {
         
         titleLabel.text = model.title
         dateLabel.text = model.date
+        
         if let imageLink = model.imageLink {
             let imageSource = URL(string: imageLink)
             imageView.kf.setImage(with: imageSource)

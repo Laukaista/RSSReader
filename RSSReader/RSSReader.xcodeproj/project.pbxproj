@@ -28,6 +28,7 @@
 		323BFC0C298B38EC00E9AE20 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 323BFC0B298B38EC00E9AE20 /* RxSwift */; };
 		323BFC0E298B3E8D00E9AE20 /* ShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323BFC0D298B3E8D00E9AE20 /* ShadowView.swift */; };
 		323BFC10298B425E00E9AE20 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323BFC0F298B425E00E9AE20 /* UIFont+Extensions.swift */; };
+		323BFC35298C68B200E9AE20 /* NewsScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323BFC34298C68B200E9AE20 /* NewsScreenViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		323BFC06298B2ED100E9AE20 /* NewsListCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListCellModel.swift; sourceTree = "<group>"; };
 		323BFC0D298B3E8D00E9AE20 /* ShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowView.swift; sourceTree = "<group>"; };
 		323BFC0F298B425E00E9AE20 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
+		323BFC34298C68B200E9AE20 /* NewsScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreenViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				323BFBFA298B18E300E9AE20 /* NewsListViewController.swift */,
+				323BFC34298C68B200E9AE20 /* NewsScreenViewController.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -230,6 +233,7 @@
 				323BFBF5298B164B00E9AE20 /* BaseView.swift in Sources */,
 				323BFC10298B425E00E9AE20 /* UIFont+Extensions.swift in Sources */,
 				323BFBF8298B16A900E9AE20 /* RxSwift+Extensions.swift in Sources */,
+				323BFC35298C68B200E9AE20 /* NewsScreenViewController.swift in Sources */,
 				323BFBFB298B18E300E9AE20 /* NewsListViewController.swift in Sources */,
 				323BFC01298B2C9700E9AE20 /* NewsListCell.swift in Sources */,
 				323BFC05298B2D3400E9AE20 /* Model.swift in Sources */,
