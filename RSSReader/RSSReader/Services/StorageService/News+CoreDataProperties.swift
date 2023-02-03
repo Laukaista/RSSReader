@@ -21,6 +21,7 @@ extension News {
     @NSManaged public var imageLink: String?
     @NSManaged public var isViewed: Bool
     @NSManaged public var content: String
+    @NSManaged public var newsLink: String
 
 }
 

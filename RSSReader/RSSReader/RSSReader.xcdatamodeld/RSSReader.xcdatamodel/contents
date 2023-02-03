@@ -5,6 +5,7 @@
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="imageLink" optional="YES" attributeType="String"/>
         <attribute name="isViewed" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="newsLink" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
     </entity>
 </model>
